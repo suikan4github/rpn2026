@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,12 +54,51 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_LPUART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+extern void exec_calc();		// calculator execution body function.
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// STDOUT hook. Enable printf.
+int _write(int file, char *ptr, int len)
+{
+#if 1
+	// To UART
+  HAL_UART_Transmit(&hlpuart2,(uint8_t *)ptr,len,10);
+  return len;
+#else
+  // To SWV Data console
+    int DataIdx;
+    for(DataIdx=0; DataIdx<len; DataIdx++)
+    {
+      ITM_SendChar(*ptr++);
+    }
+    return len;
+#endif
+}
 
+// Call this function only when release build.
+static void ProtectSWD(void)
+{
+	// In the release build, we set the SWD port as input, and pull up/down.
+	// This will protect the SWD pins from the static discharge.
+	// See STM32G0B1 reference manual for a detail.
+#ifndef DEBUG
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /*Configure GPIO pin : PA13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA14 */
+  GPIO_InitStruct.Pin = GPIO_PIN_14;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif
+}
 /* USER CODE END 0 */
 
 /**
@@ -98,6 +137,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  ProtectSWD();			// Set SWD pins as GPIO ( release build only )
+  setbuf(stdout, NULL);	// enable non-buffered output for STDIO.
+  exec_calc();			// Start calculator
+
   while (1)
   {
     /* USER CODE END WHILE */
@@ -266,11 +309,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, BLANK_Pin|LOAD_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : KEY1_Pin */
-  GPIO_InitStruct.Pin = KEY1_Pin;
+  /*Configure GPIO pin : KEY0_Pin */
+  GPIO_InitStruct.Pin = KEY0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(KEY1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(KEY0_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PC14 PC15 PC6 */
   GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_6;
@@ -284,8 +327,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : KEY2_Pin KEY3_Pin */
-  GPIO_InitStruct.Pin = KEY2_Pin|KEY3_Pin;
+  /*Configure GPIO pins : KEY1_Pin KEY2_Pin */
+  GPIO_InitStruct.Pin = KEY1_Pin|KEY2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
