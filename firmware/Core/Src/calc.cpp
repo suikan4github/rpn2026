@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <rpnengine.hpp>
+#include "calcparam.hpp"
 
 extern SPI_HandleTypeDef hspi1;			// Defined by the CubeMX.
 
@@ -70,7 +71,7 @@ extern "C" void exec_calc()
 	printf("\n\nHello!\n");
 
 	// create calc::console object
-   calc::console = new rpn_engine::Console(" RPN-210 ");
+   calc::console = new rpn_engine::Console(calc::splash_string);
 
 	// initialize the anti chattering objects with threshold, callback and its position.
 	for (unsigned int row=0; row<kRowCount; row++)
