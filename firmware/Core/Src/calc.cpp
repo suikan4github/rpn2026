@@ -5,10 +5,14 @@
  *      Author: takemasa
  */
 
+#define ENABLE_DEBUG_PRINT 0
+
 #include "main.h"
 
-#include <stdio.h>
+#if ENABLE_DEBUG_PRINT
 #include <cstring>
+#include <stdio.h>
+#endif
 #include <rpnengine.hpp>
 #include "calcparam.hpp"
 
@@ -162,6 +166,8 @@ extern "C" void exec_calc()
 							  rpn_engine::KeyLevel::low
 			  );
 
+#if ENABLE_DEBUG_PRINT
+
 			  // Is display data changed, print out the data for debug.
 			  if (std::strcmp(digits_str,old_text) || (decimal_point_position != old_decimal_point_position))
 			  {
@@ -184,6 +190,7 @@ extern "C" void exec_calc()
 				  }
 				  printf("%s\n", print_txt);
 			  }
+#endif
 		  } // for
 
 	}
