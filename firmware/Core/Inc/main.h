@@ -50,6 +50,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -58,16 +60,36 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define KEY0_Pin GPIO_PIN_9
-#define KEY0_GPIO_Port GPIOB
-#define KEY1_Pin GPIO_PIN_0
-#define KEY1_GPIO_Port GPIOA
-#define KEY2_Pin GPIO_PIN_1
-#define KEY2_GPIO_Port GPIOA
-#define BLANK_Pin GPIO_PIN_4
-#define BLANK_GPIO_Port GPIOA
-#define LOAD_Pin GPIO_PIN_6
+#define KC0_Pin GPIO_PIN_0
+#define KC0_GPIO_Port GPIOA
+#define KC1_Pin GPIO_PIN_1
+#define KC1_GPIO_Port GPIOA
+#define KC2_Pin GPIO_PIN_2
+#define KC2_GPIO_Port GPIOA
+#define KR0_Pin GPIO_PIN_3
+#define KR0_GPIO_Port GPIOA
+#define KR1_Pin GPIO_PIN_4
+#define KR1_GPIO_Port GPIOA
+#define KR2_Pin GPIO_PIN_5
+#define KR2_GPIO_Port GPIOA
+#define KR3_Pin GPIO_PIN_6
+#define KR3_GPIO_Port GPIOA
+#define KR4_Pin GPIO_PIN_0
+#define KR4_GPIO_Port GPIOB
+#define KR5_Pin GPIO_PIN_1
+#define KR5_GPIO_Port GPIOB
+#define KR6_Pin GPIO_PIN_2
+#define KR6_GPIO_Port GPIOB
+#define KR7_Pin GPIO_PIN_6
+#define KR7_GPIO_Port GPIOC
+#define KR8_Pin GPIO_PIN_10
+#define KR8_GPIO_Port GPIOA
+#define LOAD_Pin GPIO_PIN_11
 #define LOAD_GPIO_Port GPIOA
+#define BLANK_Pin GPIO_PIN_12
+#define BLANK_GPIO_Port GPIOA
+#define EN24V_Pin GPIO_PIN_8
+#define EN24V_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
@@ -77,5 +99,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
